@@ -25,12 +25,10 @@ class Cache:
   def __init__(self):
     self.config = config.config()
     self.path = self.config['cache']['path']
-    self.aws_access_key = self.config['cache']['AWS_ACCESS_KEY']
-    self.aws_secret_key = self.config['cache']['AWS_SECRET_KEY']
     self.size = parseSize(self.config['cache']['size'])
 
   def s3listcontents(self, bucketname):
-    conn = S3Connection(self.aws_access_key, self.aws_secret_key)
+    conn = S3Connection()
     b = conn.get_bucket(bucketname)
     o = b.list()
     conn.close()
@@ -42,7 +40,7 @@ class Cache:
       while (self.__getStateFromLog(bucketname, objname) == "downloading..."):
         time.sleep(1)
     else:
-      conn = S3Connection(self.aws_access_key, self.aws_secret_key)
+      conn = S3Connection()
       b = conn.get_bucket(bucketname)
       k = Key(b)
       k.key = objname

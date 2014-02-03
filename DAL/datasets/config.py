@@ -5,13 +5,7 @@ import getpass
 from os.path import expanduser
 
 def get_config_file():
-  home = expanduser("~")
-  if os.path.exists(home+'/.dalconfig'):
-    return open(home+'/.dalconfig', 'r')
-  elif os.path.exists(home+'/dalconfig.json'):
-    return open(home+'/dalconfig.json', 'r')
-  else:
-    return None
+  return open("/dalconfig.json", "rU")
 
 def config():
   f = get_config_file()
