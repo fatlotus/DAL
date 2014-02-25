@@ -9,6 +9,8 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import czipfile as zipfile
 from collections import defaultdict
+import os
+import errno
 
 #TODO - size handling
 def parseSize(s):
@@ -26,9 +28,23 @@ class Cache:
     self.config = config.config()
     self.path = self.config['cache']['path']
     self.size = parseSize(self.config['cache']['size'])
+    
+    try:
+      os.makedirs(self.path)
+    except OSError as exc: # http://stackoverflow.com/a/600612/1028526
+      if exc.errno == errno.EEXIST and os.path.isdir(self.path):
+        pass
+      else:
+        raise
+
+  def connect(self):
+    return S3Connection(
+      aws_access_key_id = self.config['aws_access_key_id'],
+      aws_secret_access_key = self.config['aws_secret_access_key']
+    )
 
   def s3listcontents(self, bucketname):
-    conn = S3Connection()
+    conn = self.connect()
     b = conn.get_bucket(bucketname)
     o = b.list()
     conn.close()
@@ -40,7 +56,7 @@ class Cache:
       while (self.__getStateFromLog(bucketname, objname) == "downloading..."):
         time.sleep(1)
     else:
-      conn = S3Connection()
+      conn = self.connect()
       b = conn.get_bucket(bucketname)
       k = Key(b)
       k.key = objname

@@ -2,10 +2,15 @@ import json
 import os
 import os.path
 import getpass
-from os.path import expanduser
 
 def get_config_file():
-  return open("/dalconfig.json", "rU")
+  chunks = os.path.abspath(".").split(os.path.sep)
+  
+  for i in xrange(len(chunks)):
+    path = os.path.sep.join(chunks[:-i] + ["dalconfig.json"])
+    
+    if os.path.exists(path):
+      return open(path, "rU")
 
 def config():
   f = get_config_file()
