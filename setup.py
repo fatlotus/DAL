@@ -5,4 +5,6 @@ setup(name='DAL',
       author='Charles Cary',
       author_email='cioc@uchicago.edu',
       url='http://github.com/cioc/DAL',
-      packages=['DAL', 'DAL.datasets', 'DAL.hadoop'])
+      packages=['DAL', 'DAL.datasets', 'DAL.hadoop'],
+      install_requires=["boto>=2.21.2","numpy"]
+)
