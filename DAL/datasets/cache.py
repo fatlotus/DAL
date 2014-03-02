@@ -51,20 +51,14 @@ class Cache:
     return o
   
   def s3tocache(self, bucketname, objname, decompress=None):
-    r = self.__lockOrNone(bucketname, objname)
-    if r is None:
-      while (self.__getStateFromLog(bucketname, objname) == "downloading..."):
-        time.sleep(1)
-    else:
-      conn = self.connect()
-      b = conn.get_bucket(bucketname)
-      k = Key(b)
-      k.key = objname
-      path = storage_name(self.path, objname, bucketname)
-      k.get_contents_to_filename(path)
-      if decompress is not None:
-        self.decompress(decompress, path) 
-      self.__logWithLock(bucketname, objname, "COMPLETE")
+    conn = self.connect()
+    b = conn.get_bucket(bucketname)
+    k = Key(b)
+    k.key = objname
+    path = storage_name(self.path, objname, bucketname)
+    k.get_contents_to_filename(path)
+    if decompress is not None:
+      self.decompress(decompress, path) 
        
   def decompress(self, cmd, path):
     decompath = decompress_name(path)
@@ -81,28 +75,14 @@ class Cache:
     return decompath
   
   def cleancache(self):
-    if os.path.exists(self.path+'/cache.log'): 
-      state = defaultdict(lambda: [])
-      with open(self.path+'/cache.log', 'r') as f:
-        for l in f:
-          pieces = l.split()
-          if len(l) > 0 and len(pieces) == 3:
-            pieces = l.split()
-            k = pieces[0] + '|' +pieces[1]
-            state[k].append(pieces[2])
-      with open(self.path+'/cache.log', 'w') as f:
-        for k, v in state.iteritems():
-          if 'downloading...' in v and 'COMPLETE' in v:
-            pieces = k.split('|')
-            f.write(pieces[0] + ' ' + pieces[1] + ' ' + 'downloading...\n')
-            f.write(pieces[0] + ' ' + pieces[1] + ' ' + 'COMPLETE\n')
+    return None
   
   def directhandle(self, bucketname, objname, decompress=None, binary=None):
     if decompress is None:
       path = storage_name(self.path, objname, bucketname)
     else:
       path = decompress_name(storage_name(self.path, objname, bucketname))
-    if os.path.isfile(path) and self.__getStateFromLog(bucketname, objname) == "COMPLETE":
+    if os.path.isfile(path):
       if binary is not None:
         return open(path, 'rb')
       else:
@@ -115,41 +95,20 @@ class Cache:
         return open(path)
   
   def __getStateFromLog(self, bucketname, objname):
-    foundDownload = False
-    entrylog = open(self.path+'/cache.log', "a+") 
-    for l in entrylog:
-      pieces = l.split(" ")
-      if pieces[0] == bucketname and pieces[1] == objname:
-        if pieces[2].strip() == "COMPLETE":
-          return "COMPLETE"
-        else:
-          foundDownload = True
-    if foundDownload:
-      return "downloading..."
-    return None 
+    filename = bucketname + "-" + objname
+    if os.path.exists(os.path.join(self.path, filename)):
+      return "COMPLETE"
+    else:
+      return NONE
    
   def __lockOrNone(self, bucketname, obj):
-    entrylog = open(self.path+'/cache.log', "a+") 
-    fcntl.flock(entrylog.fileno(), fcntl.LOCK_EX)
-    state = self.__getStateFromLog(bucketname, obj)
-    if state is None:
-      self.__log(bucketname, obj, "downloading...")
-      fcntl.flock(entrylog.fileno(), fcntl.LOCK_UN)
-      return "downloading..."
-    fcntl.flock(entrylog.fileno(), fcntl.LOCK_UN)
-    entrylog.close()
-    return None 
+    return None
 
   def __logWithLock(self, bucketname, objname, state):
-    entrylog = open(self.path+'/cache.log', "a+") 
-    fcntl.flock(entrylog.fileno(), fcntl.LOCK_EX)
-    entry = "%s %s %s" % (bucketname, objname, state)
-    entrylog.write(entry+'\n')    
-    fcntl.flock(entrylog.fileno(), fcntl.LOCK_UN)
-    entrylog.close()
+    pass
 
   def __log(self, bucketname, objname, state):
     entrylog = open(self.path+'/cache.log', "a+") 
     entry = "%s %s %s" % (bucketname, objname, state)
     entrylog.write(entry+'\n')   
-    entrylog.close() 
+    entrylog.close()

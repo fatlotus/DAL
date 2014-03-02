@@ -32,7 +32,8 @@ class TinyMetaData(S3Iterable):
     
   def byid(self, index):
     if index < 0 or index > self.img_count:
-      raise IndexError("Index must be between 0 and %d" % (self.img_count))
+      return numpy.fromstring("", dtype='uint8')
+    
     block = int(math.floor(index / 3400))
     h = self.cache.directhandle(self.bucketname, str(block)+'.part.restore',binary=True)
     offset = (index % 3400) * self.block_size
@@ -119,7 +120,7 @@ class TinyImages(S3Iterable):
 
   def __byid(self, index):
     if index < 0 or index > self.img_count:
-      raise IndexError("Index must be between 0 and %d" % (self.img_count))
+      raise IndexError("Index was %d, but must be between 0 and %d" % (index, self.img_count))
     block = int(math.floor(index / 3400))
     h = self.cache.directhandle(self.bucketname, str(block)+'.part.restore',binary=True)
     offset = (index % 3400) * self.block_size
