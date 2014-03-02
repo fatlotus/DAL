@@ -1,3 +1,6 @@
 boto>=2.21.2
 numpy
 czipfile
+Cython
+pyleargist
+pillow
