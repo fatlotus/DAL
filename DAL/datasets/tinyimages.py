@@ -92,7 +92,7 @@ class TinyImages(S3Iterable):
   def display(self, items):
     import cStringIO as StringIO
     import base64
-    import scipy
+    import scipy.misc
     from IPython.core.display import HTML
     from IPython.core.display import display
     output_html = ""
