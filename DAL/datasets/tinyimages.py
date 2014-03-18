@@ -101,7 +101,8 @@ class TinyImages(S3Iterable):
       img = scipy.misc.toimage(t) 
       output = StringIO.StringIO()
       img.save(output, format="PNG")
-      output_html += '<img src="data:image/png;base64,%s"/>' % base64.b64encode(output.getvalue())
+      output_html += ('<img style="margin:0;display:inline-block" '
+      'src="data:image/png;base64,%s"/>') % base64.b64encode(output.getvalue())
     display(HTML(output_html)) 
 
   def byid(self, indexes):
