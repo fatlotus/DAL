@@ -7,6 +7,7 @@ from datasets.cache import Cache
 from datasets.rcv1 import rcv1
 from datasets.lightcurves import LightCurves
 from datasets.wisheslabelled import WishesLabelled
+from helpers import sort_file
 
 class_table = {'tinyimages': TinyImages,
                'wishes': Wishes,
