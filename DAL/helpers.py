@@ -22,8 +22,9 @@ from tempfile import gettempdir
 from itertools import islice, cycle
 from collections import namedtuple
 import heapq
+import sys, json
 
-__all__ = ["sort_file"]
+__all__ = ["sort_file", "set_flag"]
 
 Keyed = namedtuple("Keyed", ["key", "obj"])
 
@@ -85,3 +86,11 @@ def sort_file(input, output, key=None, buffer_size=32000, tempdirs=None):
                 os.remove(chunk.name)
             except Exception:
                 pass
+
+def set_status(message):
+    """
+    Sets the status of this task, visible in the control panel.
+    """
+
+    sys.__stdout__.write("REPORTING_SEMAPHORE {}\n".format(json.dumps(message)))
+    sys.__stdout__.flush()
