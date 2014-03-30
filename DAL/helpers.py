@@ -70,7 +70,7 @@ def sort_file(input, output, key=None, buffer_size=32000, tempdirs=None):
 
                 current_chunk.sort(key=key)
                 output_chunk = open(os.path.join(
-                    tempdir, '{:06i}'.format(len(chunks))), 'w+b', 64 * 1024)
+                    tempdir, '{:06d}'.format(len(chunks))), 'w+b', 64 * 1024)
                 chunks.append(output_chunk)
                 output_chunk.writelines(current_chunk)
                 output_chunk.flush()
