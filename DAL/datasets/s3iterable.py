@@ -18,7 +18,8 @@ class S3Iterable(object):
     l = self.cache.s3listcontents(self.bucketname)
     o = []
     for i in l:
-      o.append(i.key)
+      if i.key.endswith(".restore"):
+        o.append(i.key)
     return o
 
   def iter(self, subset):
