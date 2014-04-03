@@ -15,12 +15,7 @@ class S3Iterable(object):
     self.decompress = None
 
   def subsets(self):
-    l = self.cache.s3listcontents(self.bucketname)
-    o = []
-    for i in l:
-      if i.key.endswith(".restore"):
-        o.append(i.key)
-    return o
+    return [i.key for i in self.cache.s3listcontents(self.bucketname)]
 
   def iter(self, subset):
     h = self.cache.directhandle(self.bucketname, subset, decompress=self.decompress)
