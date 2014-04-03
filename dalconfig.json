@@ -3,13 +3,14 @@
       "meta-bucket": "ml-tinyimages-metadata",
       "bucket": "ml-tinyimages"
    },
+   "genomes": {
+       "bucket": "ml-genomics"
+   },
    "cache": {
       "path": "./cache",
       "size": "unused"
    },
    "system": {
      "local": false
-   },
-   "aws_access_key_id": "AKIAICGBF45H6KZUT5DA",
-   "aws_secret_access_key": "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"
+   }
 }
