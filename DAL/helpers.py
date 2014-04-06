@@ -174,7 +174,7 @@ class FileReference(object):
         if type == "local":
             self._filename = reference
         else:
-            self._filename = tempfile.mkstemp()
+            self._filename = tempfile.mkstemp()[1]
 
             bucket = boto.connect_s3().get_bucket("ml-checkpoints")
             bucket.new_key(reference).get_contents_to_filename(self._filename)
