@@ -25,6 +25,7 @@ import heapq
 import sys, json
 from datasets import config
 import uuid
+import boto
 
 __all__ = ["sort_file", "set_flag"]
 
@@ -143,7 +144,7 @@ class FileReference(object):
             location = uuid.uuid4()
 
             bucket = boto.connect_s3().get_bucket("ml-checkpoints")
-            bucket.new_key(location).put_contents_from_filename(self._filename)
+            bucket.new_key(location).set_contents_from_filename(self._filename)
 
             self._location = ("s3", location)
         else:
@@ -176,7 +177,7 @@ class FileReference(object):
             self._filename = tempfile.mkstemp()
 
             bucket = boto.connect_s3().get_bucket("ml-checkpoints")
-            bucket.new_key(refernece).get_contents_to_filename(self._filename)
+            bucket.new_key(reference).get_contents_to_filename(self._filename)
 
         return self._filename
 
