@@ -15,7 +15,8 @@ class S3Iterable(object):
     self.decompress = None
 
   def subsets(self):
-    return [i.key for i in self.cache.s3listcontents(self.bucketname)]
+    return [i.key for i in self.cache.s3listcontents(self.bucketname)
+            if not i.key.endswith("meta.txt") ]
 
   def iter(self, subset):
     h = self.cache.directhandle(self.bucketname, subset, decompress=self.decompress)
