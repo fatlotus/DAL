@@ -90,7 +90,7 @@ def sort_file(input, output, key=None, buffer_size=1000000, tempdirs=None):
             except Exception:
                 pass
 
-def merge_sorted_files(inputs, ouputs, key=None):
+def merge_sorted_files(inputs, output, key=None):
     """
     Merges the given presorted input files into a single sorted output file.
     
@@ -99,7 +99,7 @@ def merge_sorted_files(inputs, ouputs, key=None):
     """
 
     with open(output, 'wb', 64 * 1024) as output_file:
-        output_file.writelines(merge(key, *chunks))
+        output_file.writelines(merge(key, *inputs))
 
 def set_status(message):
     """
