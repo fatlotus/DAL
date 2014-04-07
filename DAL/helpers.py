@@ -121,7 +121,7 @@ class FileReference(object):
     Represents a serializable reference to an object.
     """
 
-    def __init__(self, file_or_name):
+    def __init__(self, file_or_name, keep_local_copy = True):
         """
         Initialize this FileReference with the given file.
         """
@@ -131,6 +131,9 @@ class FileReference(object):
         else:
             self._filename = file_or_name
         self._location = None
+
+        if keep_local_copy is False:
+            self.remove_local_copy()
 
     def __getstate__(self):
         """
@@ -180,6 +183,16 @@ class FileReference(object):
             bucket.new_key(reference).get_contents_to_filename(self._filename)
 
         return self._filename
+
+    def remove_local_copy(self):
+        """
+        Ensures that this FileReference does not count towards the quota.
+        """
+
+        if not self._location:
+            self.__getstate__()
+
+        os.remove(self._filename)
 
     def open(self, mode="r"):
         """
