@@ -144,7 +144,7 @@ class FileReference(object):
             return self._location
 
         if running_on_aws():
-            location = uuid.uuid4()
+            location = "blobs/{}".format(uuid.uuid4())
 
             bucket = boto.connect_s3().get_bucket("ml-checkpoints",
                        validate = False)
@@ -206,3 +206,55 @@ class FileReference(object):
         """
 
         return open(self.filename, mode)
+
+def only_once(function):
+    """
+    Ensures that the given function is only run once with the given input.
+    """
+
+    # Only enable memoization on Amazon Web Services.
+    if not running_on_aws():
+        return function
+
+    # Connect to the proper bucket.
+    bucket = boto.connect_s3().get_bucket("ml-checkpoints")
+
+    # Prepare per-user memoization prefix for this function.
+    prefix = json.dumps([
+      os.environ.get('SUBMITTER', ''), marshal.dumps(function.co_code)
+    ])
+
+    @functools.wraps(function)
+    def inner(*vargs, **dargs):
+        """
+        Wrapper for the function to memoize.
+        """
+
+        # Set up memoization.
+        key_name = hashlib.sha1(pickle.dumps((vargs, dargs))).hexdigest()
+        key = bucket.get_key(key_name)
+        result = None
+
+        # Look up and parse the relevant key.
+        if key is not None:
+            packed_data = key.get_contents_as_string()
+
+            try:
+                result = pickle.loads(packed_data)
+            except Exception:
+                key = None
+        else:
+            key = bucket.new_key(key_name)
+
+        # Evaluate the function, if we need to.
+        #  (Potential bug: functions returning None are not memoized.
+
+        if result is not None:
+            result = function(*vargs, **dargs)
+
+        # Save the result before returning.
+        bucket.new_key("checkpoints/{!r}".format()).set_contents_from_string(
+          pickle.dumps(result))
+        return result
+
+    return inner
