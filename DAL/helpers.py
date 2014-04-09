@@ -146,7 +146,8 @@ class FileReference(object):
         if running_on_aws():
             location = uuid.uuid4()
 
-            bucket = boto.connect_s3().get_bucket("ml-checkpoints")
+            bucket = boto.connect_s3().get_bucket("ml-checkpoints",
+                       validate = False)
             bucket.new_key(location).set_contents_from_filename(self._filename)
 
             self._location = ("s3", location)
@@ -159,6 +160,11 @@ class FileReference(object):
         """
         Unpickles this object with the given state dictionary.
         """
+
+        bucket = boto.connect_s3().get_bucket("ml-checkpoints",
+                   validate = False)
+        if bucket.get_key(location) is None:
+            raise ValueError("FileReference no longer exists.")
 
         self._location = state
         self._filename = None
