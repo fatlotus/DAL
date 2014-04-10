@@ -119,6 +119,14 @@ class TinyImages(S3Iterable):
         o.append(self.__byid(i))
       return o
 
+  def tagged(self):
+      """
+      Returns a list of hand-tagged images.
+      """
+
+      fp = self.cache.directhandle(self.bucketname, "labelled.txt")
+      return json.loads(fp.read())
+
   def __byid(self, index):
     if index < 0 or index > self.img_count:
       raise IndexError("Index was %d, but must be between 0 and %d" % (index, self.img_count))
