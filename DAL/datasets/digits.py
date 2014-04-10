@@ -1,6 +1,7 @@
 import config
 from cache import Cache
 from s3iterable import S3Iterable
+import numpy
 
 class Digits(S3Iterable):
   def __init__(self):
@@ -16,7 +17,7 @@ class Digits(S3Iterable):
     Returns a list of all digits.
     """
 
-    if self.config().local():
+    if config.local():
       return [3, 5]
     else:
       return range(10)
@@ -26,6 +27,14 @@ class Digits(S3Iterable):
     Generate data for the given digit. The value +subset+ should be either
     "train" or "test", as appropriate.
     """
+
+    if subset not in ("train", "test"):
+      raise ValueError("Unknown subset {!r}".format(subset))
+    
+    if digit not in self.subsets():
+      raise ValueError("Unknown digit {!r} (must be one of {!r})".format(
+        digit, self.subsets()
+      ))
 
     lines = super(Digits, self).iter("{}{}.csv".format(subset, digit))
 
