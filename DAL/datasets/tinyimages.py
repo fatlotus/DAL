@@ -119,7 +119,7 @@ class TinyImages(S3Iterable):
         o.append(self.__byid(i))
       return o
 
-  def tagged(self):
+  def labelled(self):
       """
       Returns a list of hand-tagged images.
       """
