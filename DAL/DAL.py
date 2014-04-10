@@ -8,6 +8,7 @@ from datasets.rcv1 import rcv1
 from datasets.lightcurves import LightCurves
 from datasets.wisheslabelled import WishesLabelled
 from datasets.genomes import Genomes
+from datasets.digits import Digits
 from helpers import sort_file
 
 class_table = {'tinyimages': TinyImages,
@@ -18,7 +19,8 @@ class_table = {'tinyimages': TinyImages,
                'rcv1': rcv1,
                'wishes-labelled': WishesLabelled,
                'lightcurves': LightCurves,
-               'genomes': Genomes}
+               'genomes': Genomes,
+               'digits': Digits}
 
 def create(name,original=None):
   if name in class_table:
