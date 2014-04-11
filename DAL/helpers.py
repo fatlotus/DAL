@@ -61,6 +61,9 @@ def sort_file(input, output, key=None, buffer_size=1000000, tempdirs=None):
     if not tempdirs:
         tempdirs.append(tempfile.gettempdir())
 
+    if not key:
+        key = lambda x: x
+
     chunks = []
     try:
         with open(input, 'rb', 64 * 1024) as input_file:
