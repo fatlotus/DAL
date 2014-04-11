@@ -9,7 +9,6 @@ from datasets.lightcurves import LightCurves
 from datasets.wisheslabelled import WishesLabelled
 from datasets.genomes import Genomes
 from datasets.digits import Digits
-from helpers import sort_file
 
 class_table = {'tinyimages': TinyImages,
                'wishes': Wishes,
