@@ -51,7 +51,7 @@ class TinyImages(S3Iterable):
     super(TinyImages, self).__init__() 
     self.config = config.config()
     if config.local():
-      self.bucketname = self.config['tinyimages']['bucket']+'-local'
+      self.bucketname = self.config['tinyimages']['bucket']
       self.img_count = 6400 
     else:
       self.bucketname = self.config['tinyimages']['bucket']
@@ -129,7 +129,7 @@ class TinyImages(S3Iterable):
       return json.loads(fp.read())
 
   def __byid(self, index):
-    if index < 0 or index > self.img_count:
+    if index < 0 or (index > self.img_count and index not in self.labelled("small")):
       raise IndexError("Index was %d, but must be between 0 and %d" % (index, self.img_count))
     block = int(math.floor(index / 3400))
     h = self.cache.directhandle(self.bucketname, str(block)+'.part.restore',binary=True)
