@@ -119,12 +119,13 @@ class TinyImages(S3Iterable):
         o.append(self.__byid(i))
       return o
 
-  def labelled(self):
+  def labelled(self, label):
       """
       Returns a list of hand-tagged images.
       """
 
-      fp = self.cache.directhandle(self.bucketname, "labelled.txt")
+      fp = self.cache.directhandle(self.bucketname, "labelled-{}.txt".
+        format(label))
       return json.loads(fp.read())
 
   def __byid(self, index):
