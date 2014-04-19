@@ -17,10 +17,7 @@ class Digits(S3Iterable):
     Returns a list of all digits.
     """
 
-    if config.local():
-      return [3, 5]
-    else:
-      return range(10)
+    return range(10)
 
   def iter(self, subset, digit):
     """
