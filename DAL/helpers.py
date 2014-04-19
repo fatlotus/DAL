@@ -24,8 +24,11 @@ from collections import namedtuple
 import heapq
 import sys, json
 from datasets import config
+import hashlib
 import uuid
 import boto
+import marshal
+import pickle
 
 def set_status(message):
     """
