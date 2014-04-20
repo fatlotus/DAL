@@ -150,7 +150,7 @@ def only_once(function):
 
     # Prepare per-user memoization prefix for this function.
     prefix = json.dumps([
-      os.environ.get('SUBMITTER', ''), marshal.dumps(function.co_code)
+      os.environ.get('SUBMITTER', ''), marshal.dumps(function.func_code)
     ])
 
     @functools.wraps(function)
