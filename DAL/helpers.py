@@ -93,7 +93,8 @@ class FileReference(object):
 
         bucket = boto.connect_s3().get_bucket("ml-checkpoints",
                    validate = False)
-        if bucket.get_key(location) is None:
+
+        if bucket.get_key(state) is None:
             raise ValueError("FileReference no longer exists.")
 
         self._location = state
