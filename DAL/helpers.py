@@ -101,7 +101,7 @@ class FileReference(object):
                 raise ValueError("FileReference no longer exists.")
 
         elif kind == "local":
-            if not os.path.isfile(reference) is None:
+            if not os.path.isfile(reference):
                 raise ValueError("FileReference no longer exists.")
 
         self._location = state
