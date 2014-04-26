@@ -5,7 +5,7 @@ import os.path
 import subprocess
 import fcntl
 import time
-from boto.s3.connection import S3Connection
+from boto.s3.connection import S3Connection, OrdinaryCallingFormat
 from boto.s3.key import Key
 import czipfile as zipfile
 from collections import defaultdict
@@ -40,7 +40,8 @@ class Cache:
   def connect(self):
     return S3Connection(
       aws_access_key_id = self.config.get('aws_access_key_id'),
-      aws_secret_access_key = self.config.get('aws_secret_access_key')
+      aws_secret_access_key = self.config.get('aws_secret_access_key'),
+      calling_format = OrdinaryCallingFormat,
     )
 
   def s3listcontents(self, bucketname):
