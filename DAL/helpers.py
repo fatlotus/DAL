@@ -91,10 +91,18 @@ class FileReference(object):
         Unpickles this object with the given state dictionary.
         """
 
-        bucket = boto.connect_s3().get_bucket("ml-checkpoints",
-                   validate = False)
-        if bucket.get_key(location) is None:
-            raise ValueError("FileReference no longer exists.")
+        kind, reference = state
+
+        if kind == "s3":
+            bucket = boto.connect_s3().get_bucket("ml-checkpoints",
+                       validate = False)
+
+            if bucket.get_key(reference) is None:
+                raise ValueError("FileReference no longer exists.")
+
+        elif kind == "local":
+            if not os.path.isfile(reference):
+                raise ValueError("FileReference no longer exists.")
 
         self._location = state
         self._filename = None

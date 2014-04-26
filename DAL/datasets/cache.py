@@ -41,7 +41,7 @@ class Cache:
     return S3Connection(
       aws_access_key_id = self.config.get('aws_access_key_id'),
       aws_secret_access_key = self.config.get('aws_secret_access_key'),
-      calling_format = OrdinaryCallingFormat,
+      calling_format = OrdinaryCallingFormat(),
     )
 
   def s3listcontents(self, bucketname):
