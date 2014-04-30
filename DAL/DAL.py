@@ -9,6 +9,8 @@ from datasets.lightcurves import LightCurves
 from datasets.wisheslabelled import WishesLabelled
 from datasets.genomes import Genomes
 from datasets.digits import Digits
+from datasets.pnas import PNAS
+from datasets.wikipedia import Wikipedia
 
 class_table = {'tinyimages': TinyImages,
                'wishes': Wishes,
@@ -19,7 +21,9 @@ class_table = {'tinyimages': TinyImages,
                'wishes-labelled': WishesLabelled,
                'lightcurves': LightCurves,
                'genomes': Genomes,
-               'digits': Digits}
+               'digits': Digits,
+               'pnas': PNAS,
+               'wikipedia': Wikipedia}
 
 def create(name,original=None):
   if name in class_table:
