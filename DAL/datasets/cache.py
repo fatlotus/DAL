@@ -11,6 +11,7 @@ import czipfile as zipfile
 from collections import defaultdict
 import os
 import errno
+from httplib import IncompleteRead
 
 #TODO - size handling
 def parseSize(s):
@@ -57,7 +58,18 @@ class Cache:
     k = Key(b)
     k.key = objname
     path = storage_name(self.path, objname, bucketname)
-    k.get_contents_to_filename(path)
+    
+    for i in xrange(5):
+        try:
+            k.get_contents_to_filename(path)
+        except IncompleteRead:
+            k.close(fast = True)
+            time.sleep(1)
+        else:
+            break
+    else:
+        k.get_contents_to_filename(path)
+    
     if decompress is not None:
       self.decompress(decompress, path) 
        
