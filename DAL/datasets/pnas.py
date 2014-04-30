@@ -17,7 +17,4 @@ class PNAS(S3Iterable):
     return super(PNAS, self).byid("chunk_{}.json".format(id // 1000), id % 1000)
 
   def article_ids(self, id):
-    if config.local():
-      return xrange(1000)
-    else:
-      return xrange(13948)
+    return xrange(13948)
