@@ -11,10 +11,11 @@ class PNAS(S3Iterable):
       self.bucketname = 'ml-pnas-local'
     else:
       self.bucketname = 'ml-pnas'
-    self.parser = json.parse
+    self.parser = json.loads
 
   def byid(self, id):
-    return super(PNAS, self).byid("chunk_{}.json".format(id // 1000), id % 1000)
+    return super(PNAS, self).byid(
+      ("chunk_{}.json".format(id // 1000), id % 1000))
 
   def article_ids(self, id):
     return xrange(13948)

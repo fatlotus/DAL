@@ -11,11 +11,11 @@ class Wikipedia(S3Iterable):
       self.bucketname = 'ml-wikipedia-local'
     else:
       self.bucketname = 'ml-wikipedia'
-    self.parser = json.parse
+    self.parser = json.loads
 
   def byid(self, id):
     return super(Wikipedia, self).byid(
-      "chunk_{}.json".format(id // 1000), id % 1000)
+      ("chunk_{}.json".format(id // 1000), id % 1000))
 
   def article_ids(self, id):
     return xrange(9988)
