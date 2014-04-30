@@ -17,5 +17,5 @@ class PNAS(S3Iterable):
     return super(PNAS, self).byid(
       ("chunk_{}.json".format(id // 1000), id % 1000))
 
-  def article_ids(self, id):
+  def all_articles(self):
     return xrange(13948)
