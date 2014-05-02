@@ -19,3 +19,6 @@ class Wikipedia(S3Iterable):
 
   def all_articles(self):
     return xrange(9988)
+
+  def test_articles(self):
+    return json.load(self.cache.directhandle(self.bucketname, 'testing.id.txt'))

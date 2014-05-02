@@ -19,3 +19,6 @@ class PNAS(S3Iterable):
 
   def all_articles(self):
     return xrange(13948)
+
+  def test_articles(self):
+    return json.load(self.cache.directhandle(self.bucketname, 'testing.id.txt'))
