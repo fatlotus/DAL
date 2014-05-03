@@ -12,6 +12,8 @@ from collections import defaultdict
 import os
 import errno
 from httplib import IncompleteRead
+import tempfile
+import shutil
 
 #TODO - size handling
 def parseSize(s):
@@ -73,19 +75,34 @@ class Cache:
     if decompress is not None:
       self.decompress(decompress, path) 
        
-  def decompress(self, cmd, path):
-    decompath = decompress_name(path)
-    if (os.path.isfile(decompath)):
-      return decompath
-    if cmd == 'unzip':
-      z = zipfile.ZipFile(path)
-      p = decompath.split('/')
-      z.extractall(path=self.path)
-      n = z.namelist()[0]
-      os.rename('/mnt/'+n, decompath)
-    else:
-      raise Exception("No Such Decompressor")
-    return decompath
+  def decompress(self, algorithm, zip_file_path):
+    """
+    Uses the given algorithm to decompress +path+ to
+    +decompress_name(path)+.
+    """
+    
+    resulting_path = decompress_name(zip_file_path)
+    
+    if not os.path.isfile(resulting_path):
+      if algorithm == 'unzip':
+        extraction_directory = tempfile.mkdtemp()
+        
+        try:
+          archive = zipfile.ZipFile(zip_file_path)
+          archive.extractall(path=extraction_directory)
+          
+          contents = archive.namelist()[0]
+          os.rename(os.path.join(extraction_directory, contents),
+            resulting_path)
+          
+        finally:
+          shutil.remove(extraction_directory)
+        
+      else:
+        raise ValueError("Unknown decompression algorithm: {!r}".
+           format(algorithm))
+    
+    return resulting_path
   
   def cleancache(self):
     return None

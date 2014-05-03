@@ -8,7 +8,8 @@ class Wishes(S3Iterable):
     super(Wishes, self).__init__() 
     self.config = config.config()
     if config.local():
-      self.bucketname = self.config['wishes']['bucket']+'-local' 
+      self.bucketname = self.config['wishes']['bucket']+'-local'
     else:
       self.bucketname = self.config['wishes']['bucket']
+      self.decompress = "unzip"
     self.parser = json.loads

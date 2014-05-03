@@ -41,6 +41,9 @@ class S3Iterable(object):
     h = self.cache.directhandle(self.bucketname, subset, decompress=self.decompress)
     c = 0
     for l in self.iterator(h):
+      if not l.strip(): # mask blank lines
+        continue
+      
       if c == i:
         if self.parser is None:
           return l
