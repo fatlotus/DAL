@@ -27,7 +27,10 @@ class S3Iterable(object):
       if self.parser is None:
         yield l
       else:
-        yield self.parser(l)
+        try:
+          yield self.parser(l)
+        except:
+          pass
 
   def filter(self, subset, f):
     h = self.cache.directhandle(self.bucketname, subset, decompress=self.decompress)
@@ -35,7 +38,10 @@ class S3Iterable(object):
       if self.parser is None:
         j = l
       else:
-        j = self.parser(l)
+        try:
+          j = self.parser(l)
+        except:
+          continue
       if f(j):
         yield j
 
@@ -46,12 +52,17 @@ class S3Iterable(object):
     for l in self.iterator(h):
       if not l.strip(): # mask blank lines
         continue
+
+      if self.parser:
+        try:
+          parsed = self.parser(l)
+        except:
+          continue
+      else:
+        parsed = l
       
       if c == i:
-        if self.parser is None:
-          return l
-        else:
-          return self.parser(l)
+        return parsed
       else:
         c += 1
     return None 
