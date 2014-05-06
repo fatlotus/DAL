@@ -8,9 +8,9 @@ class WishesLabelled(S3Iterable):
     super(WishesLabelled, self).__init__() 
     self.config = config.config()
     if config.local():
-      self.bucketname = self.config['wishes-labelled']['bucket']+'-local' 
+      self.bucketname = 'ml-wishes-labelled-local' 
     else:
-      self.bucketname = self.config['wishes-labelled']['bucket']
+      self.bucketname = 'ml-wishes-labelled'
     self.parser = json.loads
   
   def subsets(self):
@@ -32,7 +32,10 @@ class WishesLabelled(S3Iterable):
     a dictionary mapping from +tweet_id+'s to classes.
     """
     
-    oracle = json.load(self.cache.directhandle("oracle.json", "r"))
+    if config.local():
+      raise ValueError("Can only evaluate performance on the cluster.")
+    
+    oracle = json.load(self.cache.directhandle(self.bucketname, "oracle.json"))
     
     correct = 0
     total = 0
