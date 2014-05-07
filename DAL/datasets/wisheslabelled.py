@@ -41,7 +41,7 @@ class WishesLabelled(S3Iterable):
     total = 0
     
     for key, value in oracle.items():
-      if oracle[key] == values.get(key, None):
+      if oracle[key] == values.get(int(key), None):
         correct += 1
       total += 1
     
