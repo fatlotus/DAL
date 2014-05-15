@@ -28,9 +28,11 @@ class S3Iterable(object):
         yield l
       else:
         try:
-          yield self.parser(l)
+          parsed = self.parser(l)
         except:
           pass
+        else:
+          yield parsed
 
   def filter(self, subset, f):
     h = self.cache.directhandle(self.bucketname, subset, decompress=self.decompress)
