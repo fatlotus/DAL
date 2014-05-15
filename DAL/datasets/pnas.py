@@ -20,5 +20,10 @@ class PNAS(S3Iterable):
   def all_articles(self):
     return xrange(13948)
 
+  def iter(self):
+    for subset in sorted(self.subsets()):
+      for item in super(PNAS, self).iter(subset):
+        yield item
+
   def test_articles(self):
     return json.load(self.cache.directhandle(self.bucketname, 'testing.id.txt'))
