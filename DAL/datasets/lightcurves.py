@@ -10,7 +10,10 @@ class LightCurves(S3Iterable):
   def __init__(self,original=None):
     super(LightCurves, self).__init__() 
     self.config = config.config()
-    self.bucketname = 'ml-lightcurves-q14' 
+    if config.local():
+        self.bucketname = 'ml-lightcurves-q14-local'
+    else:
+        self.bucketname = 'ml-lightcurves-q14'
     self.decompress = "unzip"
     self.parser = None
 
