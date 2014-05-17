@@ -85,7 +85,7 @@ class Cache:
     
     if not os.path.isfile(resulting_path):
       if algorithm == 'unzip':
-        extraction_directory = tempfile.mkdtemp()
+        extraction_directory = self.path + "/" + str(time.time())
         
         try:
           archive = zipfile.ZipFile(zip_file_path)
