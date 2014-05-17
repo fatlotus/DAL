@@ -10,10 +10,7 @@ class LightCurves(S3Iterable):
   def __init__(self,original=None):
     super(LightCurves, self).__init__() 
     self.config = config.config()
-    if config.local():
-        self.bucketname = 'ml-lightcurves-q14-local'
-    else:
-        self.bucketname = 'ml-lightcurves-q14'
+    self.bucketname = 'ml-lightcurves-q14'
     self.decompress = "unzip"
     self.parser = None
 
@@ -44,3 +41,16 @@ class LightCurves(S3Iterable):
     req = urllib2.urlopen('http://staging.lsda.cs.uchicago.edu:8000', data)
     o = json.loads(req.read())
     return o
+
+  def subsets(self):
+    result = []
+    
+    for item in super(LightCurves, self).subsets():
+      if "examples" not in item:
+        result.append(item)
+    
+    return result
+
+  def examples(self):
+    return json.load(
+      self.cache.directhandle(self.bucketname, "examples.json"))
