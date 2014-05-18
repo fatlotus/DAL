@@ -198,6 +198,10 @@ def only_once(function):
     return inner
 
 def attach_file(file_or_file_name):
+    """
+    Outputs a local file in a persistent S3 storage space.
+    """
+
     from IPython.core.display import HTML, display
     
     # Compute the path of the given file.
@@ -251,3 +255,65 @@ def attach_file(file_or_file_name):
         Attachment: <a href="{public_url}">{display_name}</a> ({size} {unit})
     </div>
     """.format(**locals())))
+
+def shutdown_task():
+    """
+    Halts the execution of this task.
+    """
+
+    sys.__stdout__.write("DEQUEUE_THIS_TASK")
+    sys.__stdout__.flush()
+
+def request_size(requested_size, timeout = 30):
+    """
+    Requests that the cluster be resized to the given size.
+    """
+
+    # Do not allow local resizes.
+    if not running_on_aws():
+        return
+
+    # Get the current state of the cluter.
+    from IPython.parallel import Client
+    rc = Client()
+
+    # Validate the requested size.
+    size = requested_size
+
+    if size < 0 or type(size) is not int:
+        raise ValueError("Invalid worker count {!r}".format(size))
+
+    # Instances come in twos, and there must be at least one.
+    size = (size // 2) * 2
+
+    # Fix proper instance size.
+    if size < 2:
+        size = 2
+
+    # Limit the total size of the cluster, for now.
+    if size > 20:
+        size = 20
+
+    # Count the number of machines to be added or removed.
+    machine_count = (len(rc) - size) // 2
+
+    # If we need to remove nodes, do so.
+    if machine_count > 0:
+        rc[-machine_count *2::2].apply_sync(shutdown_instance)
+
+    # Otherwise, add nodes.
+    elif machine_count < 0:
+        for i in xrange(-machine_count):
+            sys.__stdout__.write("SPAWN_NEW_COPY")
+        sys.__stdout__.flush()
+
+    # Wait until everything is ready.
+    while len(rc) != size and timeout > 0:
+        time.sleep(1)
+        timeout -= 1
+
+    # Warn the user if the operation failed.
+    if len(rc) != requested_size:
+        print("Warning: requested {} instances, but only got {}.".format(
+            requested_size, len(rc)
+        ))
