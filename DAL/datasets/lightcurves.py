@@ -54,3 +54,6 @@ class LightCurves(S3Iterable):
   def examples(self):
     return json.load(
       self.cache.directhandle(self.bucketname, "examples.json"))
+  
+  def example(self):
+    return self.examples()
