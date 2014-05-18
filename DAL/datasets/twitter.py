@@ -13,7 +13,9 @@ class Twitter(S3Iterable):
       self.bucketname = self.config['twitter']['bucket']
 
     self.iterator = self.timed_iterator
-    self.parser = json.parse
+    self.parser = json.loads
+
+    self.prediction = None
 
   def iter(self):
     """
@@ -37,7 +39,8 @@ class Twitter(S3Iterable):
       if skipped != 0:
         print("WARNING: Your code is too slow, and so missed {} tweets.".
           format(skipped))
-      offset, data = line.split(":")
+      offset, data = line.split(",", 1)
+      yield data
 
   def byid(self, x):
     """
