@@ -30,6 +30,7 @@ import uuid
 import boto
 import marshal
 import pickle
+import mimetypes
 
 def set_status(message):
     """
@@ -195,3 +196,58 @@ def only_once(function):
         return result
 
     return inner
+
+def attach_file(file_or_file_name):
+    from IPython.core.display import HTML, display
+    
+    # Compute the path of the given file.
+    if hasattr(file_or_file_name, 'name'):
+        file_name = file_or_file_name.name
+    else:
+        file_name = file_or_file_name
+    
+    if not os.path.exists(file_name):
+        raise ValueError("The file {} does not exist.".format(file_name))
+    
+    if running_on_aws():
+        import boto
+        
+        # Prepare basic key in upload.
+        upload_key = str(uuid.uuid4())
+        
+        bucket = boto.connect_s3().get_bucket("ml-submissions")
+        key = bucket.new_key("attachments/" + upload_key)
+        
+        # Attempt to guess the MIME-type of this file.
+        kind, _ = mimetypes.guess_type(file_name)
+        key.content_type = kind or 'application/octet-stream'
+        
+        # Upload the given file to S3.
+        key.set_contents_from_filename(file_name)
+        
+        # Save the public URL of this file.
+        public_url = (
+            "http://ml-submissions.s3-website-us-east-1.amazonaws.com/"
+            "attachments/" + upload_key
+        )
+    
+    else:
+        # Store a local link to the file.
+        public_url = "file://" + os.path.abspath(file_name)
+    
+    # Compute the display name of the file.
+    display_name = os.path.basename(file_name)
+    size = os.path.getsize(file_name)
+    
+    # Format the size with a unit.
+    units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    while size >= 1024:
+        size /= 1024
+        units.pop(0)
+    unit = units[0]
+    
+    display(HTML("""
+    <div style="background-color:#eee;border:1px solid #ccc;padding:0.5em;">
+        Attachment: <a href="{public_url}">{display_name}</a> ({size} {unit})
+    </div>
+    """.format(**locals())))
