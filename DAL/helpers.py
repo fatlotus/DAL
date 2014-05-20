@@ -262,7 +262,7 @@ def shutdown_task():
     Halts the execution of this task.
     """
 
-    sys.__stdout__.write("DEQUEUE_THIS_TASK")
+    sys.__stdout__.write("DEQUEUE_THIS_TASK\n")
     sys.__stdout__.flush()
 
 def request_size(requested_size, timeout = 60):
@@ -300,7 +300,7 @@ def request_size(requested_size, timeout = 60):
 
     # If we need to remove nodes, do so.
     if machine_count > 0:
-        rc[-machine_count *2::2].apply_sync(shutdown_instance)
+        rc[-machine_count *2::2].apply_sync(shutdown_task)
 
     # Otherwise, add nodes.
     elif machine_count < 0:
