@@ -265,7 +265,7 @@ def shutdown_task():
     sys.__stdout__.write("DEQUEUE_THIS_TASK")
     sys.__stdout__.flush()
 
-def request_size(requested_size, timeout = 30):
+def request_size(requested_size, timeout = 60):
     """
     Requests that the cluster be resized to the given size.
     """
@@ -305,7 +305,7 @@ def request_size(requested_size, timeout = 30):
     # Otherwise, add nodes.
     elif machine_count < 0:
         for i in xrange(-machine_count):
-            sys.__stdout__.write("SPAWN_NEW_COPY")
+            sys.__stdout__.write("SPAWN_NEW_COPY\n")
         sys.__stdout__.flush()
 
     # Wait until everything is ready.
