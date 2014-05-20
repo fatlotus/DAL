@@ -20,13 +20,17 @@ class LightCurves(S3Iterable):
       v = i.strip()
       if v == '<I1N2D3I4C5A6T7O8R9>':
         if accum.strip() != "":
-          yield json.loads(accum)
+          data = json.loads(accum)
+          if len(data["data"]) == 9514:
+            yield data
         accum = ""  
       else:
         accum += i
     if accum != '':
-      yield json.loads(accum)
+      data = json.loads(accum)
       accum = ""
+      if len(data["data"]) == 9514:
+        yield data
   
   def filter(self, subset, f):
     for i in self.iter(subset):
