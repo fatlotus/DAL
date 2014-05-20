@@ -31,6 +31,7 @@ import boto
 import marshal
 import pickle
 import mimetypes
+import time
 
 def set_status(message):
     """
