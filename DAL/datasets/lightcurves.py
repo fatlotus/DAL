@@ -61,3 +61,147 @@ class LightCurves(S3Iterable):
   
   def example(self):
     return self.examples()
+
+  def prcurve_a(self, ranking):
+      """
+      Display the precision-recall curve for part A.
+      """
+      
+      import numpy as np
+      import matplotlib.pyplot as plt
+      
+      # Retrieve IDs from DAL.
+      conf_cand_eb_id = [int(i) for i in
+                             self.cache.directhandle(self.bucketname, 'conf_cand_eb_id.txt')]
+      conf_id = [int(i) for i in self.cache.directhandle(self.bucketname, 'conf_id.txt')]
+      conf_and_cand_id = [int(i) for i in
+                          self.cache.directhandle(self.bucketname, 'conf_and_cand_id.txt')]
+      conf_and_eb_id = [int(i) for i in
+                        self.cache.directhandle(self.bucketname, 'conf_and_eb_id.txt')]
+      
+      # conf + eb
+      precision = []
+      recall = []
+      count = 0.0
+      N = len(conf_and_eb_id)
+      for i in xrange(len(ranking)):
+          ID = ranking[i]
+          if ID in conf_and_eb_id:
+              count += 1.0
+              precision.append( count/(i+1) )
+              recall.append( count/ N )
+          if count == N:
+              break
+            
+      a = np.array(precision, dtype=np.float32)
+      area = np.sum(a / N)
+    
+      fig = plt.figure(figsize=(10,12))
+      ax = fig.add_subplot(2,1,1)
+      ax.plot(recall, precision, '-r',linewidth=2)
+      ax.set_xlabel('recall', fontsize=15)
+      ax.set_ylabel('precision',fontsize=15)
+      ax.set_xlim((-0.01,1.01))
+      ax.set_title('CONF+EB area = {0}'.format(area), fontsize=15)
+      plt.grid(True)
+    
+      # conf + eb + cand
+      precision = []
+      recall = []
+      count = 0.0
+      N = len(conf_cand_eb_id)
+      for i in xrange(len(ranking)):
+          ID = ranking[i]
+          if ID in conf_cand_eb_id:
+              count += 1.0
+              precision.append(count/(i+1))
+              recall.append(count/N)
+          if count == N:
+              break
+            
+      b = np.array(precision, dtype=np.float32)
+      area_1 = np.sum(b/N)
+    
+      ax = fig.add_subplot(2,1,2)
+      ax.plot(recall, precision, '-r',linewidth=2)
+      ax.set_xlabel('recall', fontsize=15)
+      ax.set_ylabel('precision',fontsize=15)
+      ax.set_xlim((-0.01,1.01))
+      ax.set_title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
+      plt.grid(True)
+      plt.show()
+    
+      return (area, area_1)
+
+  def prcurve_b(self, ranking):
+      """
+      Display the precision-recall curve for part B.
+      """
+      
+      import numpy as np
+      import matplotlib.pyplot as plt
+      
+      # Retrieve IDs from DAL.
+      conf_cand_eb_id = [int(i) for i in
+                             self.cache.directhandle(self.bucketname, 'conf_cand_eb_id.txt')]
+      conf_id = [int(i) for i in self.cache.directhandle(self.bucketname, 'conf_id.txt')]
+      conf_and_cand_id = [int(i) for i in
+                          self.cache.directhandle(self.bucketname, 'conf_and_cand_id.txt')]
+      conf_and_eb_id = [int(i) for i in
+                        self.cache.directhandle(self.bucketname, 'conf_and_eb_id.txt')]
+    
+      # conf vs eb
+      order = [i for i in ranking if i in conf_and_eb_id]
+      precision = []
+      recall = []
+      count = 0.0
+      i = 0.0
+      N = len(conf_id)
+      for ID in order:
+          i += 1.0
+          if ID in conf_id:
+              count += 1.0
+              precision.append( count/ i )
+              recall.append( count / N )
+        
+              if count == N:
+                  break
+
+      area = np.sum(np.array(precision, dtype=np.float32) / N)
+    
+      fig = plt.figure(figsize=(10,12))
+      ax = fig.add_subplot(2,1,1)
+      ax.plot(recall, precision, '-r', linewidth=2)
+      ax.set_xlabel('recall',fontsize=15)
+      ax.set_ylabel('precision',fontsize=15)
+      ax.set_title('conf vs eb area = {0}'.format(area),fontsize=15)
+      plt.grid(True)
+
+
+      order = [i for i in ranking if i in conf_cand_eb_id]
+      precision = []
+      recall = []
+      count = 0.0
+      i = 0.0
+      N = len(conf_and_cand_id)
+      for ID in order:
+          i += 1.0
+          if ID in conf_and_cand_id:
+              count += 1.0
+              precision.append( count/ i )
+              recall.append( count / N )
+        
+              if count == N:
+                  break
+    
+      area_1 = np.sum(np.array(precision, dtype=np.float32) / N)
+    
+      ax = fig.add_subplot(2,1,2)
+      ax.plot(recall, precision, '-r', linewidth=2)
+      ax.set_xlabel('recall',fontsize=15)
+      ax.set_ylabel('precision',fontsize=15)
+      ax.set_title('conf+cand vs eb area = {0}'.format(area_1),fontsize=15)
+      plt.grid(True)
+      plt.show()
+    
+      return (area, area_1)
