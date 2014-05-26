@@ -77,7 +77,7 @@ class LightCurves(S3Iterable):
       # Change strings into numbers for IDs. 
       mapping = pickle.load(self.cache.directhandle(self.bucketname,
                              "mapp.pickle"))
-      as_dict = dict(*[(y, x) for (x, y) in mapping])
+      as_dict = dict([(y, x) for (x, y) in mapping])
       ranking = [as_dict.get(x, None) for x in ranking]
       as_dict = None
       mapping = None
@@ -160,7 +160,7 @@ class LightCurves(S3Iterable):
       # Change strings into numbers for IDs. 
       mapping = pickle.load(self.cache.directhandle(self.bucketname,
                              "mapp.pickle"))
-      as_dict = dict(*[(y, x) for (x, y) in mapping])
+      as_dict = dict([(y, x) for (x, y) in mapping])
       ranking = [as_dict.get(x, None) for x in ranking]
       as_dict = None
       mapping = None
