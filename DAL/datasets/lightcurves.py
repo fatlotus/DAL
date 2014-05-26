@@ -67,7 +67,7 @@ class LightCurves(S3Iterable):
       Display the precision-recall curve for part A.
       """
       
-      if config.config().local():
+      if config.local():
           return
       
       import numpy as np
@@ -141,7 +141,7 @@ class LightCurves(S3Iterable):
       Display the precision-recall curve for part B.
       """
       
-      if config.config().local():
+      if config.local():
           return
       
       import numpy as np
