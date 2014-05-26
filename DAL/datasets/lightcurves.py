@@ -50,7 +50,7 @@ class LightCurves(S3Iterable):
     result = []
     
     for item in super(LightCurves, self).subsets():
-      if "examples" not in item:
+      if "part" in item:
         result.append(item)
     
     return result
@@ -72,6 +72,15 @@ class LightCurves(S3Iterable):
       
       import numpy as np
       import matplotlib.pyplot as plt
+      import pickle
+      
+      # Change strings into numbers for IDs. 
+      mapping = pickle.load(self.cache.directhandle(self.bucketname,
+                             "mapp.pickle"))
+      as_dict = dict(*[(y, x) for (x, y) in mapping])
+      ranking = [as_dict.get(x, None) for x in ranking]
+      as_dict = None
+      mapping = None
       
       # Retrieve IDs from DAL.
       conf_cand_eb_id = [int(i) for i in
@@ -146,6 +155,15 @@ class LightCurves(S3Iterable):
       
       import numpy as np
       import matplotlib.pyplot as plt
+      import pickle
+      
+      # Change strings into numbers for IDs. 
+      mapping = pickle.load(self.cache.directhandle(self.bucketname,
+                             "mapp.pickle"))
+      as_dict = dict(*[(y, x) for (x, y) in mapping])
+      ranking = [as_dict.get(x, None) for x in ranking]
+      as_dict = None
+      mapping = None
       
       # Retrieve IDs from DAL.
       conf_cand_eb_id = [int(i) for i in
