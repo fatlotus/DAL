@@ -96,7 +96,10 @@ class Cache:
             resulting_path)
           
         finally:
-          shutil.rmtree(extraction_directory)
+          try:
+            shutil.rmtree(extraction_directory)
+          except:
+            pass
         
       else:
         raise ValueError("Unknown decompression algorithm: {!r}".
