@@ -108,15 +108,13 @@ class LightCurves(S3Iterable):
       a = np.array(precision, dtype=np.float32)
       area = np.sum(a / N)
     
-      fig = plt.figure(figsize=(10,12))
-      ax = fig.add_subplot(2,1,1)
-      ax.plot(recall, precision, '-r',linewidth=2)
-      ax.set_xlabel('recall', fontsize=15)
-      ax.set_ylabel('precision',fontsize=15)
-      ax.set_xlim((-0.01,1.01))
-      # ax.set_title('CONF+EB area = {0}'.format(area), fontsize=15)
-      plt.grid(True)
-    
+      plt.plot(recall, precision, '-r',linewidth=2)
+      plt.xlabel('recall', fontsize=15)
+      plt.ylabel('precision',fontsize=15)
+      plt.xlim((-0.01,1.01))
+      plt.title('CONF+EB area = {0}'.format(area), fontsize=15)
+      plt.show()
+      
       # conf + eb + cand
       precision = []
       recall = []
@@ -133,14 +131,11 @@ class LightCurves(S3Iterable):
             
       b = np.array(precision, dtype=np.float32)
       area_1 = np.sum(b/N)
-    
-      ax = fig.add_subplot(2,1,2)
-      ax.plot(recall, precision, '-r',linewidth=2)
-      ax.set_xlabel('recall', fontsize=15)
-      ax.set_ylabel('precision',fontsize=15)
-      ax.set_xlim((-0.01,1.01))
-      # ax.set_title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
-      plt.grid(True)
+      
+      plt.xlabel('recall', fontsize=15)
+      plt.ylabel('precision',fontsize=15)
+      plt.xlim((-0.01,1.01))
+      plt.set_title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
       plt.show()
     
       return (area, area_1)
@@ -193,13 +188,11 @@ class LightCurves(S3Iterable):
 
       area = np.sum(np.array(precision, dtype=np.float32) / N)
     
-      fig = plt.figure(figsize=(10,12))
-      ax = fig.add_subplot(2,1,1)
-      ax.plot(recall, precision, '-r', linewidth=2)
-      ax.set_xlabel('recall',fontsize=15)
-      ax.set_ylabel('precision',fontsize=15)
-      ax.set_title('conf vs eb area = {0}'.format(area),fontsize=15)
-      plt.grid(True)
+      plt.plot(recall, precision, '-r', linewidth=2)
+      plt.xlabel('recall',fontsize=15)
+      plt.ylabel('precision',fontsize=15)
+      plt.title('conf vs eb area = {0}'.format(area),fontsize=15)
+      plt.show()
 
 
       order = [i for i in ranking if i in conf_cand_eb_id]
@@ -220,12 +213,9 @@ class LightCurves(S3Iterable):
     
       area_1 = np.sum(np.array(precision, dtype=np.float32) / N)
     
-      ax = fig.add_subplot(2,1,2)
-      ax.plot(recall, precision, '-r', linewidth=2)
-      ax.set_xlabel('recall',fontsize=15)
-      ax.set_ylabel('precision',fontsize=15)
-      ax.set_title('conf+cand vs eb area = {0}'.format(area_1),fontsize=15)
-      plt.grid(True)
+      plt.set_xlabel('recall',fontsize=15)
+      plt.set_ylabel('precision',fontsize=15)
+      plt.set_title('conf+cand vs eb area = {0}'.format(area_1),fontsize=15)
       plt.show()
     
       return (area, area_1)
