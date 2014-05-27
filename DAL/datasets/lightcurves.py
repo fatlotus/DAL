@@ -114,7 +114,7 @@ class LightCurves(S3Iterable):
       ax.set_xlabel('recall', fontsize=15)
       ax.set_ylabel('precision',fontsize=15)
       ax.set_xlim((-0.01,1.01))
-      ax.set_title('CONF+EB area = {0}'.format(area), fontsize=15)
+      # ax.set_title('CONF+EB area = {0}'.format(area), fontsize=15)
       plt.grid(True)
     
       # conf + eb + cand
@@ -139,7 +139,7 @@ class LightCurves(S3Iterable):
       ax.set_xlabel('recall', fontsize=15)
       ax.set_ylabel('precision',fontsize=15)
       ax.set_xlim((-0.01,1.01))
-      ax.set_title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
+      # ax.set_title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
       plt.grid(True)
       plt.show()
     
