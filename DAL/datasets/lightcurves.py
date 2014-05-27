@@ -109,8 +109,8 @@ class LightCurves(S3Iterable):
       area = np.sum(a / N)
     
       plt.plot(recall, precision, '-r',linewidth=2)
-      plt.xlabel('recall', fontsize=15)
-      plt.ylabel('precision',fontsize=15)
+      # plt.xlabel('recall', fontsize=15)
+      # plt.ylabel('precision',fontsize=15)
       plt.xlim((-0.01,1.01))
       # plt.title('CONF+EB area = {0}'.format(area), fontsize=15)
       plt.show()
@@ -132,8 +132,8 @@ class LightCurves(S3Iterable):
       b = np.array(precision, dtype=np.float32)
       area_1 = np.sum(b/N)
       
-      plt.xlabel('recall', fontsize=15)
-      plt.ylabel('precision',fontsize=15)
+      # plt.xlabel('recall', fontsize=15)
+      # plt.ylabel('precision',fontsize=15)
       plt.xlim((-0.01,1.01))
       # plt.title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
       plt.show()
@@ -189,8 +189,8 @@ class LightCurves(S3Iterable):
       area = np.sum(np.array(precision, dtype=np.float32) / N)
     
       plt.plot(recall, precision, '-r', linewidth=2)
-      plt.xlabel('recall',fontsize=15)
-      plt.ylabel('precision',fontsize=15)
+      # plt.xlabel('recall',fontsize=15)
+      # plt.ylabel('precision',fontsize=15)
       # plt.title('conf vs eb area = {0}'.format(area),fontsize=15)
       plt.show()
 
@@ -213,8 +213,8 @@ class LightCurves(S3Iterable):
     
       area_1 = np.sum(np.array(precision, dtype=np.float32) / N)
     
-      plt.xlabel('recall',fontsize=15)
-      plt.ylabel('precision',fontsize=15)
+      # plt.xlabel('recall',fontsize=15)
+      # plt.ylabel('precision',fontsize=15)
       # plt.title('conf+cand vs eb area = {0}'.format(area_1),fontsize=15)
       plt.show()
     
