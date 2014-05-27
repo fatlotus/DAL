@@ -112,7 +112,7 @@ class LightCurves(S3Iterable):
       plt.xlabel('recall', fontsize=15)
       plt.ylabel('precision',fontsize=15)
       plt.xlim((-0.01,1.01))
-      plt.title('CONF+EB area = {0}'.format(area), fontsize=15)
+      # plt.title('CONF+EB area = {0}'.format(area), fontsize=15)
       plt.show()
       
       # conf + eb + cand
@@ -135,7 +135,7 @@ class LightCurves(S3Iterable):
       plt.xlabel('recall', fontsize=15)
       plt.ylabel('precision',fontsize=15)
       plt.xlim((-0.01,1.01))
-      plt.title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
+      # plt.title('CONF+CAND+EB area = {0}'.format(area_1), fontsize=15)
       plt.show()
     
       return (area, area_1)
@@ -191,7 +191,7 @@ class LightCurves(S3Iterable):
       plt.plot(recall, precision, '-r', linewidth=2)
       plt.xlabel('recall',fontsize=15)
       plt.ylabel('precision',fontsize=15)
-      plt.title('conf vs eb area = {0}'.format(area),fontsize=15)
+      # plt.title('conf vs eb area = {0}'.format(area),fontsize=15)
       plt.show()
 
 
@@ -215,7 +215,7 @@ class LightCurves(S3Iterable):
     
       plt.xlabel('recall',fontsize=15)
       plt.ylabel('precision',fontsize=15)
-      plt.title('conf+cand vs eb area = {0}'.format(area_1),fontsize=15)
+      # plt.title('conf+cand vs eb area = {0}'.format(area_1),fontsize=15)
       plt.show()
     
       return (area, area_1)
