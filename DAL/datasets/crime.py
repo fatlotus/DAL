@@ -50,10 +50,13 @@ class Crime(S3Iterable):
            decompress="unzip")
 
     for date, lat, lon, crime_type in csv.reader(fp):
-      day = datetime.datetime.strptime(date, "%m/%d/%Y %I:%M:%S %p")
-      latitude = float(lat)
-      longitude = float(lon)
-      yield day, latitude, longitude, crime_type
+      try:
+        day = datetime.datetime.strptime(date, "%m/%d/%Y %I:%M:%S %p")
+        latitude = float(lat)
+        longitude = float(lon)
+        yield day, latitude, longitude, crime_type
+      except ValueError:
+        pass
 
   """
   def metadata(self):
