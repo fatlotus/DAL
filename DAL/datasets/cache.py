@@ -107,10 +107,45 @@ class Cache:
     
     return resulting_path
   
+  def run_gc(self, target_ratio = 0.30):
+    """
+    Attempts to clear the files in /tmp up to the given availability level.
+    """
+
+    # Get rid of old files first.
+    files = [(os.path.getmtime(os.path.join(self.path, x)), x)
+               for x in os.listdir(self.path)]
+
+    for _, filename in sorted(files):
+      fullpath = os.path.join(self.path, filename)
+
+      # Compute the file usage ratio.
+      stats = os.statvfs(fullpath)
+      ratio = float(stats.f_bavail) / stats.f_blocks
+      print(repr(ratio))
+
+      if ratio > target_ratio:
+        break
+
+      # Clear this file.
+      os.remove(fullpath)
+
   def cleancache(self):
-    return None
-  
+    """
+    Removes all files from the cache.
+    """
+
+    self.run_gc(1.0)
+
   def directhandle(self, bucketname, objname, decompress=None, binary=None):
+    """
+    Downloads the given file from the S3 bucket.
+    """
+
+    # Ensure that we have space to download the given file.
+    self.run_gc()
+
+    # Downloads the file.
     if decompress is None:
       path = storage_name(self.path, objname, bucketname)
     else:
