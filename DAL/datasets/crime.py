@@ -1,6 +1,9 @@
 import config
 import json
-import pickle
+try:
+  import cPickle as pickle
+except ImportError:
+  import pickle
 from cache import Cache
 from s3iterable import S3Iterable
 import csv
