@@ -52,11 +52,14 @@ class Crime(S3Iterable):
     fp = self.cache.directhandle(self.bucketname, "raw_file.zip",
            decompress="unzip")
 
-    for date, lat, lon, crime_type in csv.reader(fp):
+    for row in csv.reader(fp):
       try:
+        date, lat, lon, crime_type = row
+        
         day = datetime.datetime.strptime(date, "%m/%d/%Y %I:%M:%S %p")
         latitude = float(lat)
         longitude = float(lon)
+        
         yield day, latitude, longitude, crime_type
       except ValueError:
         pass
