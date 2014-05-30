@@ -122,7 +122,6 @@ class Cache:
       # Compute the file usage ratio.
       stats = os.statvfs(fullpath)
       ratio = float(stats.f_bavail) / stats.f_blocks
-      print(repr(ratio))
 
       if ratio > target_ratio:
         break
