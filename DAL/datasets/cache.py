@@ -127,7 +127,10 @@ class Cache:
         break
 
       # Clear this file.
-      shutil.rmtree(fullpath)
+      if os.path.isfile(fullpath):
+        os.remove(fullpath)
+      else:
+        shutil.rmtree(fullpath)
 
   def cleancache(self):
     """
